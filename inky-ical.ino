@@ -23,7 +23,7 @@ void setup()
   delay(100);
   Log.begin(LOG_LEVEL, &Serial);
 
-  Log.notice("=== gcal-on-eink Starting ===" CR);
+  Log.notice("=== inky-ical Starting ===" CR);
   Log.notice("Refresh interval: %d hours" CR, (int)REFRESH_INTERVAL_HOURS);
 
   // Initialize display, shows init/splash screen which stays up until the

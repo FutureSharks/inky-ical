@@ -1,4 +1,4 @@
-# gcal-on-eink
+# inky-ical
 
 Display your Google Calendars on an ESP32-S3 e-ink display. Battery-powered, 6-hour refresh cycles, configurable wake times.
 

@@ -60,11 +60,11 @@ void display_init()
   int32_t cursor_x = 140;
   int32_t cursor_y = 140;
 
-  writeln(&Roboto32, "gcal-on-eink", &cursor_x, &cursor_y, framebuffer);
+  writeln(&Roboto32, "inky-ical", &cursor_x, &cursor_y, framebuffer);
 
   cursor_x = 140;
   cursor_y += 60;
-  writeln(&Roboto12, "github.com/FutureSharks/gcal-on-eink", &cursor_x, &cursor_y, framebuffer);
+  writeln(&Roboto12, "github.com/FutureSharks/inky-ical", &cursor_x, &cursor_y, framebuffer);
 
   cursor_x = 140;
   cursor_y += 40;
