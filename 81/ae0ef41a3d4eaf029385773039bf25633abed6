@@ -1,0 +1,21 @@
+inky-ical.ino
+  h_61c37ecb9a0034 1-81
+src/display.cpp
+  h_61c37ecb9a0034 63,67
+README.md
+  h_61c37ecb9a0034 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "81ae0ef41a3d4eaf029385773039bf25633abed6",
+  "prompts": {},
+  "humans": {
+    "h_0add7ee37ebac2": {
+      "author": "Max Williams <max-rocket-internet@users.noreply.github.com>"
+    },
+    "h_61c37ecb9a0034": {
+      "author": "Max Williams <futuresharks@gmail.com>"
+    }
+  }
+}
