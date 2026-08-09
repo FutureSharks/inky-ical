@@ -5,10 +5,12 @@ profiles:
     fqbn: esp32:esp32:esp32s3:CDCOnBoot=cdc,FlashSize=16M,PartitionScheme=app3M_fat9M_16MB,PSRAM=opi
     port: /dev/cu.usbmodem1101
     libraries:
-      - LilyGo-EPD47 (1.0.1)
+      # - LilyGo-EPD47 (1.0.1)
+      - LilyGo-EPD47 (1.1.0)
       # Commented and using local copy of uICAL until https://github.com/sourcesimian/uICAL/pull/36 is merged
       # - uICAL (0.0.5)
       - dir: libraries/uICAL
+      - dir: libraries/roboto
       - ArduinoLog (1.1.1)
     platforms:
       - platform: esp32:esp32 (2.0.17)

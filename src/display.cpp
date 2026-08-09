@@ -4,10 +4,7 @@
 #include <ArduinoLog.h>
 #include <epd_driver.h>
 #include "utilities.h"
-#include "roboto.h"
-#include "roboto12.h"
-#include "roboto18.h"
-#include "roboto32.h"
+#include <roboto_font.h>
 #include <cstdarg>
 
 uint8_t *framebuffer = NULL;
@@ -60,15 +57,15 @@ void display_init()
   int32_t cursor_x = 140;
   int32_t cursor_y = 140;
 
-  writeln(&Roboto32, "inky-ical", &cursor_x, &cursor_y, framebuffer);
+  write_roboto("inky-ical", &cursor_x, &cursor_y, framebuffer, 40, 0);
 
   cursor_x = 140;
   cursor_y += 60;
-  writeln(&Roboto12, "github.com/FutureSharks/inky-ical", &cursor_x, &cursor_y, framebuffer);
+  write_roboto("github.com/FutureSharks/inky-ical", &cursor_x, &cursor_y, framebuffer, 12, 0);
 
   cursor_x = 140;
   cursor_y += 40;
-  writeln(&Roboto12, "by Max Williams", &cursor_x, &cursor_y, framebuffer);
+  write_roboto("by Max Williams", &cursor_x, &cursor_y, framebuffer, 12, 0);
 
   epd_draw_grayscale_image(epd_full_screen(), framebuffer);
   epd_poweroff();
@@ -86,7 +83,7 @@ static void display_init_line(const char *text)
   int32_t y = init_status_y;
 
   epd_poweron();
-  writeln(&Roboto12, text, &x, &y, framebuffer);
+  write_roboto(text, &x, &y, framebuffer, 12, 0);
   epd_draw_grayscale_image(epd_full_screen(), framebuffer);
   epd_poweroff();
 
@@ -102,6 +99,107 @@ void display_init_status(const char *fmt, ...)
   va_end(args);
 
   display_init_line(message);
+}
+
+static void display_events_style_one(const std::vector<CalendarEvent> &events)
+{
+  // Column layout: date | time | title, each in its own aligned column so
+  // the eye can scan straight down instead of parsing one long string.
+  const int32_t title_x = 480;
+  const int32_t row_height = 54;
+  const int32_t border_buffer = 20;
+
+  // Set starting place for event loop
+  int32_t event_cursor_y = 110;
+  int event_count = 0;
+
+  for (int i = 0; i < events.size() && event_count < MAX_EVENTS_TO_DISPLAY; i++)
+  {
+    const CalendarEvent &event = events[i];
+
+    if (event_cursor_y > EPD_HEIGHT - row_height)
+      break;
+
+    String title = event.title;
+    if (event.calendar_name.length() && (DISPLAY_CALENDAR_NAME) > 0)
+      title = title + " (" + event.calendar_name + ")";
+
+    // Truncate the title if it would run off the right edge
+    const int max_title_len = 26;
+    if (title.length() > max_title_len)
+      title = title.substring(0, max_title_len - 3) + "...";
+
+    int32_t x;
+    int32_t y;
+
+    // today, tomorrow, in n days
+    x = border_buffer;
+    y = event_cursor_y;
+    String time_text = String(event.date.c_str()) + ", " + event.time.c_str();
+    write_roboto(time_text.c_str(), &x, &y, framebuffer, 18, 0);
+
+    // event title
+    x = title_x;
+    y = event_cursor_y;
+    write_roboto(title.c_str(), &x, &y, framebuffer, 18, 0);
+
+    event_cursor_y += row_height;
+
+    Log.trace("%s %s %s" CR, event.date.c_str(), event.time.c_str(), title.c_str());
+    event_count++;
+  }
+}
+
+static void display_events_style_two(const std::vector<CalendarEvent> &events)
+{
+  const int32_t title_x = 340;
+  const int32_t row_height = 62;
+  const int32_t border_buffer = 20;
+
+  // Set starting place for event loop
+  int32_t event_cursor_y = 90;
+  int event_count = 0;
+
+  for (int i = 0; i < events.size() && event_count < MAX_EVENTS_TO_DISPLAY; i++)
+  {
+    const CalendarEvent &event = events[i];
+
+    if (event_cursor_y > EPD_HEIGHT - row_height)
+      break;
+
+    String title = event.title;
+    if (event.calendar_name.length() && (DISPLAY_CALENDAR_NAME) > 0)
+      title = title + " (" + event.calendar_name + ")";
+
+    // Truncate the title if it would run off the right edge
+    const int max_title_len = 26;
+    if (title.length() > max_title_len)
+      title = title.substring(0, max_title_len - 3) + "...";
+
+    int32_t x;
+    int32_t y;
+
+    // today, tomorrow, in n days
+    x = border_buffer;
+    y = event_cursor_y;
+    write_roboto(event.date.c_str(), &x, &y, framebuffer, 12, 0);
+
+    // event time
+    x = border_buffer;
+    y = event_cursor_y + 24;
+    String time_text = " > " + String(event.time.c_str());
+    write_roboto(time_text.c_str(), &x, &y, framebuffer, 12, 0);
+
+    // event title
+    x = title_x;
+    y = event_cursor_y + 20;
+    write_roboto(title.c_str(), &x, &y, framebuffer, 18, 0);
+
+    event_cursor_y += row_height;
+
+    Log.trace("%s %s %s" CR, event.date.c_str(), event.time.c_str(), title.c_str());
+    event_count++;
+  }
 }
 
 void display_calendar(const std::vector<CalendarEvent> &events)
@@ -122,59 +220,21 @@ void display_calendar(const std::vector<CalendarEvent> &events)
   epd_poweron();
   epd_clear();
 
-  int32_t cursor_y = 42;
-  int32_t border_buffer = 20;
-
-  // Column layout: date | time | title, each in its own aligned column so
-  // the eye can scan straight down instead of parsing one long string.
-  const int32_t date_x = 20;
-  const int32_t time_x = 260;
-  const int32_t title_x = 420;
-  const int32_t row_height = 42;
-
-  int event_count = 0;
+  const int32_t border_buffer = 20;
 
   // Write display header
   char header_text[32];
   format_header_date(header_text, sizeof(header_text));
-  int32_t header_x = date_x;
-  int32_t header_y = cursor_y + 5;
-  writeln(&Roboto18, header_text, &header_x, &header_y, framebuffer);
-  epd_draw_line(0, cursor_y + border_buffer, EPD_WIDTH, cursor_y + border_buffer, 1, framebuffer);
-  cursor_y += cursor_y + border_buffer;
+  int32_t header_x = border_buffer;
+  int32_t header_y = 47;
+  write_roboto(header_text, &header_x, &header_y, framebuffer, 18, 0);
+  epd_draw_line(0, header_y + 15, EPD_WIDTH, header_y + 15, 1, framebuffer);
 
-  for (int i = 0; i < events.size() && event_count < MAX_EVENTS_TO_DISPLAY; i++)
-  {
-    const CalendarEvent &event = events[i];
-
-    if (cursor_y > EPD_HEIGHT - row_height)
-      break;
-
-    String title = event.title;
-    if (event.calendar_name.length() && (DISPLAY_CALENDAR_NAME) > 0)
-      title = title + " (" + event.calendar_name + ")";
-
-    // Truncate the title if it would run off the right edge
-    const int max_title_len = 26;
-    if (title.length() > max_title_len)
-      title = title.substring(0, max_title_len - 3) + "...";
-
-    int32_t x;
-
-    x = date_x;
-    writeln(&Roboto18, event.date.c_str(), &x, &cursor_y, framebuffer);
-
-    x = time_x;
-    writeln(&Roboto18, event.time.c_str(), &x, &cursor_y, framebuffer);
-
-    x = title_x;
-    writeln(&Roboto18, title.c_str(), &x, &cursor_y, framebuffer);
-
-    cursor_y += row_height;
-
-    Log.trace("%s %s %s" CR, event.date.c_str(), event.time.c_str(), title.c_str());
-    event_count++;
-  }
+#if DISPLAY_EVENTS_STYLE == 2
+  display_events_style_two(events);
+#else
+  display_events_style_one(events);
+#endif
 
   // Draw to display and power down
   epd_draw_grayscale_image(epd_full_screen(), framebuffer);

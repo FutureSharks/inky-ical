@@ -10,6 +10,7 @@
 #define MAX_EVENTS_TO_DISPLAY 9     // Max events shown, merged across all calendars
 #define NTP_SERVER "pool.ntp.org"   // SNTP server
 #define DISPLAY_CALENDAR_NAME false // Show the name of the calendar, if available
+#define DISPLAY_EVENTS_STYLE 2      // Event list layout: 1 = style one, 2 = style two
 
 // ===== Logging Configuration =====
 #define DEBUG_MODE true // Set to true for logging and no deep sleep
