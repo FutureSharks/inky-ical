@@ -1,0 +1,52 @@
+src/display.cpp
+  s_e31fc316b6fcb4::t_83879e469c490a 7
+  s_e31fc316b6fcb4::t_7f2d3c73f96a34 60,64,68,86,139,144,185,191,196,230
+  s_5c235d734005c2::t_f694341acfefed 138
+  s_e31fc316b6fcb4::t_26ee085cb91632 104,150-154,203-229,231-237
+  h_61c37ecb9a0034 108-110,112-114,120,133,135-137,141-143,146,155-161,167,180,182-184,187-190,193,195,198
+src/config.h
+  h_61c37ecb9a0034 13
+libraries/roboto/roboto_font.c
+  s_e31fc316b6fcb4::t_7cac68ebced928 1
+  s_e31fc316b6fcb4::t_d8eec6655318bc 2-4
+  s_e31fc316b6fcb4::t_b6beba3693f247 5-7
+libraries/roboto/roboto48.h
+  h_61c37ecb9a0034 3
+  s_e31fc316b6fcb4::t_fd272f644c7b56 1-2,4-7169
+libraries/roboto/roboto_font.h
+  s_e31fc316b6fcb4::t_e546fb02db4ac1 1-45
+libraries/roboto/README.md
+  h_61c37ecb9a0034 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "504887f5a94f62b22cd1c9728c9e565d99c7fd61",
+  "prompts": {},
+  "humans": {
+    "h_0add7ee37ebac2": {
+      "author": "Max Williams <max-rocket-internet@users.noreply.github.com>"
+    },
+    "h_61c37ecb9a0034": {
+      "author": "Max Williams <futuresharks@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_5c235d734005c2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c6aae09e-167c-4513-ad4e-d59604dc1e29",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Max Williams <futuresharks@gmail.com>"
+    },
+    "s_e31fc316b6fcb4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e6b743bd-3632-44d4-b8c2-9db626dc929c",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Max Williams <futuresharks@gmail.com>"
+    }
+  }
+}
