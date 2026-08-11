@@ -58,6 +58,10 @@ namespace uICAL {
                 bool readuntil(string& st, char delim, size_t maxLen = 0);
 
             protected:
+                // Block until at least one byte can be read, or the stream's
+                // timeout elapses. Returns false only at a real end of input.
+                bool waitAvailable() const;
+
                 Stream& stm;
         };
 

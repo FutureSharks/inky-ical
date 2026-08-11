@@ -5,6 +5,10 @@
 #include "uICAL/stream.h"
 #include "uICAL/string.h"
 
+#ifdef ARDUINO
+    #include <Arduino.h>
+#endif
+
 namespace uICAL {
     ostream& ostream::operator <<(const ostream& stm) {
         for (string st : stm.strings) {
@@ -69,45 +73,68 @@ namespace uICAL {
         : stm(stm)
         {}
 
+        // A network Stream delivers its body in bursts, so available() can
+        // momentarily report zero in the middle of the data. Treating that as
+        // end-of-input would silently split a line in two, so wait for the
+        // next burst and only give up once the timeout expires.
+        bool istream_Stream::waitAvailable() const {
+            if (this->stm.available()) {
+                return true;
+            }
+            unsigned long timeout = this->stm.getTimeout();
+            unsigned long start = millis();
+            while (millis() - start < timeout) {
+                if (this->stm.available()) {
+                    return true;
+                }
+                delay(1);
+            }
+            return false;
+        }
+
         char istream_Stream::peek() const {
-            int ch = this->stm.peek();
-            return ch;
+            if (!this->waitAvailable()) {
+                return (char)-1;
+            }
+            return (char)this->stm.peek();
         }
 
         char istream_Stream::get() {
-            int ch = this->stm.read();
-            return ch;
+            if (!this->waitAvailable()) {
+                return (char)-1;
+            }
+            return (char)this->stm.read();
         }
 
         bool istream_Stream::readuntil(string& st, char delim, size_t maxLen) {
-            // Loop to handle lines longer than the internal buffer.
-            // Use maxLen to cap accumulated length (0 = no limit).
-            static const size_t CHUNK_SIZE = 81;
-            char buf[CHUNK_SIZE];
+            // Read one byte at a time rather than via readBytesUntil().
+            // readBytesUntil() returns a short count both when it reached the
+            // delimiter and when it simply timed out mid-line, and the caller
+            // cannot tell the two apart. On a bursty network connection that
+            // silently splits one line into two: "TZNAME:GMT+2" arriving in
+            // two TCP segments becomes "TZNAME" followed by ":GMT+2", and the
+            // fragment without a ':' then fails to parse as a VLINE.
+            // Ending a line only on a real delimiter removes that ambiguity.
             st = "";
+            bool got_any = false;
 
-            while (maxLen == 0 || st.length() < maxLen) {
-                size_t bytesRead = this->stm.readBytesUntil(delim, buf, CHUNK_SIZE - 1);
-                if (bytesRead == 0) {
-                    // Timeout or EOF with no data
-                    return !st.isEmpty();
+            while (true) {
+                if (!this->waitAvailable()) {
+                    break;
                 }
-
-                buf[bytesRead] = 0;
-                st += buf;
-
-                // If we read less than buffer size, we hit the delimiter
-                if (bytesRead < CHUNK_SIZE - 1) {
+                int ch = this->stm.read();
+                if (ch < 0) {
+                    break;
+                }
+                got_any = true;
+                if ((char)ch == delim) {
                     return true;
                 }
-                // Buffer was full - continue reading until delimiter or max length
+                if (maxLen == 0 || st.length() < maxLen) {
+                    st += (char)ch;
+                }
             }
-            // Hit max length - consume remaining chars until delimiter
-            while (true) {
-                int c = this->stm.read();
-                if (c < 0 || c == delim) break;
-            }
-            return true;
+            return got_any;
         }
 
         istream_String::istream_String(const String& st)
