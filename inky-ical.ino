@@ -57,25 +57,20 @@ void setup()
 
   // Clean up
   events.clear();
-
-  if (DEBUG_MODE)
-  {
-    Log.notice("Pausing indefinitely instead of deep sleep as DEBUG_MODE is enabled" CR);
-    return;
-  }
-
-  Log.notice("Entering deep sleep for %d hours" CR, (int)REFRESH_INTERVAL_HOURS);
-
-  // Shutdown all the things
-  WiFi.disconnect(true);
-  Serial.end();
-  epd_poweroff_all();
-  esp_sleep_enable_timer_wakeup(REFRESH_INTERVAL_MICROSECONDS);
-  esp_deep_sleep_start();
 }
 
 void loop()
 {
-  // Should only be here for debug mode so just sleep
-  delay(1000);
+  if (DEBUG_MODE || Serial)
+  {
+    Log.notice("Pausing indefinitely instead of deep sleep as DEBUG_MODE=%d or Serial=%d" CR);
+    delay(999999);
+  } else {
+    Log.notice("Entering deep sleep for %d hours" CR, (int)REFRESH_INTERVAL_HOURS);
+    WiFi.disconnect(true);
+    Serial.end();
+    epd_poweroff_all();
+    esp_sleep_enable_timer_wakeup(REFRESH_INTERVAL_MICROSECONDS);
+    esp_deep_sleep_start();
+  }
 }

@@ -269,7 +269,6 @@ static String extract_calendar_name(const char *data, size_t length)
 std::vector<CalendarEvent> fetch_calendar(const char *url, int days)
 {
   Log.notice("Fetching calendar from: %s" CR, url);
-  display_init_status("Getting ICAL URL");
 
   std::vector<CalendarEvent> events;
 

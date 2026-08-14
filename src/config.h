@@ -4,10 +4,10 @@
 #include <ArduinoLog.h>
 
 // ===== Display Configuration =====
-#define REFRESH_INTERVAL_HOURS 6    // Wake and refresh every N hours
+#define REFRESH_INTERVAL_HOURS 4    // Wake and refresh every N hours
 #define TIMEZONE_OFFSET 0           // UTC offset (e.g., 2 for UTC+2, -5 for UTC-5)
 #define DISPLAY_DAYS 180            // Show events for next N days
-#define MAX_EVENTS_TO_DISPLAY 9     // Max events shown, merged across all calendars
+#define MAX_EVENTS_TO_DISPLAY 8     // Max events shown, merged across all calendars
 #define NTP_SERVER "pool.ntp.org"   // SNTP server
 #define DISPLAY_CALENDAR_NAME false // Show the name of the calendar, if available
 #define DISPLAY_EVENTS_STYLE 2      // Event list layout: 1 = style one, 2 = style two
