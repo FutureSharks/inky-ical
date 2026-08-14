@@ -1,0 +1,36 @@
+src/display.cpp
+  s_8510c48c884d76::t_d10d4892a28c5c 393-396
+  h_61c37ecb9a0034 412
+  s_8510c48c884d76::t_cf35d0c65b58bc 57-58,64-65,67-72,74-94
+  s_8510c48c884d76::t_fb170319ab1630 43,48,53,268-370,372-373
+  s_8510c48c884d76::t_627aad211528ca 40-42
+  s_8510c48c884d76::t_f71561233cd21c 44-47
+  s_8510c48c884d76::t_669aef03c0c288 49-52
+  s_8510c48c884d76::t_9e5998f8b4471d 54-56
+  s_8510c48c884d76::t_550d9e1e25e396 371
+  s_8510c48c884d76::t_0fbff1a910b166 374
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "ba13c5b5c104f043092aaf10287f9f5ee6250230",
+  "prompts": {},
+  "humans": {
+    "h_0add7ee37ebac2": {
+      "author": "Max Williams <max-rocket-internet@users.noreply.github.com>"
+    },
+    "h_61c37ecb9a0034": {
+      "author": "Max Williams <futuresharks@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_8510c48c884d76": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1632040b-9df8-482a-9218-0937bc58c652",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Max Williams <futuresharks@gmail.com>"
+    }
+  }
+}
