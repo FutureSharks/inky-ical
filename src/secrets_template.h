@@ -18,9 +18,4 @@
   "https://calendar.google.com/calendar/ical/YOUR_CALENDAR_ID%40gmail.com/public/basic.ics", \
 }
 
-// ===== Display Configuration =====
-#define REFRESH_INTERVAL_HOURS 4 // Wake and refresh every N hours
-#define TIMEZONE_OFFSET 0        // UTC offset (e.g., 2 for UTC+2, -5 for UTC-5)
-#define DISPLAY_DAYS 7           // Show events for next N days
-
 #endif
