@@ -1,0 +1,47 @@
+README.md
+  h_61c37ecb9a0034 3,5,7-12,14,18,21,27-29
+CLAUDE.md
+  s_db1ca99b6b439c::t_6d6eaa96842a70 48,50-53,58-65,67,69,73
+  s_5fb0e44d439fd9::t_c753b228874830 1-36,38-47,49,54-57,66,68,70-72,74
+  s_2d85384d875e2f::t_910d7c44561834 37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "d1b4691b9a0379eae74c5158cef51b9832ed741e",
+  "prompts": {},
+  "humans": {
+    "h_0add7ee37ebac2": {
+      "author": "Max Williams <max-rocket-internet@users.noreply.github.com>"
+    },
+    "h_61c37ecb9a0034": {
+      "author": "Max Williams <futuresharks@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_2d85384d875e2f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "238c9dfb-ab75-439b-b98f-4d909b244850",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Max Williams <futuresharks@gmail.com>"
+    },
+    "s_5fb0e44d439fd9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "85072abf-c661-49b3-b00c-2ce7f9646af6",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Max Williams <futuresharks@gmail.com>"
+    },
+    "s_db1ca99b6b439c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4eebb6e5-a23e-44db-8ace-8ede8ad0f8d0",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Max Williams <futuresharks@gmail.com>"
+    }
+  }
+}
