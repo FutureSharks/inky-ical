@@ -1,5 +1,9 @@
 #include "roboto_font.h"
 
+#include <stddef.h>
+
+#include "roboto8.h"
+#include "roboto10.h"
 #include "roboto12.h"
 #include "roboto14.h"
 #include "roboto16.h"
@@ -20,6 +24,8 @@ typedef struct
 } RobotoFontEntry;
 
 static const RobotoFontEntry roboto_fonts[] = {
+    { 8, &Roboto8 },
+    { 10, &Roboto10 },
     { 12, &Roboto12 },
     { 14, &Roboto14 },
     { 16, &Roboto16 },
@@ -70,4 +76,26 @@ void write_roboto(const char *string,
     };
 
     write_mode(roboto_font(size), string, cursor_x, cursor_y, framebuffer, BLACK_ON_WHITE, &props);
+}
+
+int32_t measure_roboto(const char *string, uint8_t size)
+{
+    int32_t cursor_x = 0;
+    int32_t cursor_y = 0;
+    write_roboto(string, &cursor_x, &cursor_y, NULL, size, 0);
+    return cursor_x;
+}
+
+int32_t write_roboto_right(const char *string,
+                         int32_t right_edge_x,
+                         int32_t baseline_y,
+                         uint8_t *framebuffer,
+                         uint8_t size,
+                         uint8_t brightness)
+{
+    int32_t left_edge_x = right_edge_x - measure_roboto(string, size);
+    int32_t cursor_x = left_edge_x;
+    int32_t cursor_y = baseline_y;
+    write_roboto(string, &cursor_x, &cursor_y, framebuffer, size, brightness);
+    return left_edge_x;
 }
