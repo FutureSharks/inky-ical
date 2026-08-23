@@ -1,0 +1,27 @@
+src/battery.cpp
+  s_ec976456e09686::t_913452fbe6c2ce 7-8,12-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "3448610f6bc9f227ce8f6960692af891499a3d1b",
+  "prompts": {},
+  "humans": {
+    "h_0add7ee37ebac2": {
+      "author": "Max Williams <max-rocket-internet@users.noreply.github.com>"
+    },
+    "h_61c37ecb9a0034": {
+      "author": "Max Williams <futuresharks@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_ec976456e09686": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6f5f4fee-0f6b-41ce-a730-7af4ab63d309",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Max Williams <futuresharks@gmail.com>"
+    }
+  }
+}
