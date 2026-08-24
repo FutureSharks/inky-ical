@@ -24,6 +24,9 @@ namespace uICAL {
             seconds_t fromUTC(seconds_t timestamp) const;
 
             bool is_aware() const;
+            // True when this TZ came from a VTIMEZONE TZID rather than a
+            // literal UTC/offset suffix ("Z", "+0200").
+            bool has_tzid() const;
             int offset() const;
 
             void str(ostream& out) const;

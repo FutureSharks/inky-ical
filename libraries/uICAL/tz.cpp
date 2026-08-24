@@ -62,6 +62,10 @@ namespace uICAL {
         return this->aware;
     }
 
+    bool TZ::has_tzid() const {
+        return !this->id.empty();
+    }
+
     int TZ::parseOffset(const string& tz) {
         if (tz == "Z") {
             return 0;
