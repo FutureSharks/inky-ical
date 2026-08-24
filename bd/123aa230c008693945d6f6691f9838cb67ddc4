@@ -1,0 +1,29 @@
+libraries/uICAL/tz.cpp
+  s_fcbca7a13af3c7::t_4e7dc046ee2a94 65-68
+libraries/uICAL/uICAL/tz.h
+  s_fcbca7a13af3c7::t_4e7dc046ee2a94 27-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "bd123aa230c008693945d6f6691f9838cb67ddc4",
+  "prompts": {},
+  "humans": {
+    "h_0add7ee37ebac2": {
+      "author": "Max Williams <max-rocket-internet@users.noreply.github.com>"
+    },
+    "h_61c37ecb9a0034": {
+      "author": "Max Williams <futuresharks@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_fcbca7a13af3c7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "516809d2-7aac-4785-a172-994306ba1a09",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Max Williams <futuresharks@gmail.com>"
+    }
+  }
+}
