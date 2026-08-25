@@ -15,8 +15,9 @@
 // the download.
 static const unsigned long HTTP_STREAM_TIMEOUT_MS = 10000;
 
-// Convert a uICAL DateStamp (already in local time) to an epoch time_t.
-static time_t to_epoch(const uICAL::DateStamp &ds)
+// Convert a uICAL DateStamp holding a local wall-clock time to an epoch
+// time_t, letting the C library apply the device timezone (including DST).
+static time_t to_epoch_local(const uICAL::DateStamp &ds)
 {
   struct tm tm_value = {0};
   tm_value.tm_year = ds.year - 1900;
@@ -27,6 +28,64 @@ static time_t to_epoch(const uICAL::DateStamp &ds)
   tm_value.tm_sec = ds.second;
   tm_value.tm_isdst = -1;
   return mktime(&tm_value);
+}
+
+// Convert a uICAL DateStamp holding a UTC wall-clock time to an epoch time_t.
+// Done by hand rather than with timegm(), which the ESP32 toolchain's newlib
+// does not expose; this is the standard days-from-civil calculation and needs
+// no timezone state at all.
+static time_t to_epoch_utc(const uICAL::DateStamp &ds)
+{
+  int year = (int)ds.year;
+  const int month = (int)ds.month;
+
+  // Shift the year to start in March so leap days land at the end of it.
+  year -= month <= 2 ? 1 : 0;
+  const int era = (year >= 0 ? year : year - 399) / 400;
+  const unsigned year_of_era = (unsigned)(year - era * 400);          // [0, 399]
+  const unsigned day_of_year =
+      (153 * (month + (month > 2 ? -3 : 9)) + 2) / 5 + ds.day - 1;    // [0, 365]
+  const unsigned day_of_era =
+      year_of_era * 365 + year_of_era / 4 - year_of_era / 100 + day_of_year;
+  const long days = (long)era * 146097 + (long)day_of_era - 719468;   // days since 1970-01-01
+
+  return (time_t)days * 86400 + (time_t)ds.hour * 3600 + (time_t)ds.minute * 60 +
+         (time_t)ds.second;
+}
+
+// Turn an event boundary into a real epoch time_t.
+//
+// uICAL renders a DateTime as a wall clock in whatever zone the feed attached
+// to it, so how that wall clock maps onto an instant depends on the zone:
+//
+//   * DTSTART;TZID=Europe/Berlin:...  - rendered in the feed's own zone.
+//     uICAL's VTIMEZONE map keeps a single, DST-less offset per TZID, so its
+//     own offset is not trustworthy; instead treat the wall clock as device
+//     local time (the device runs the same zone as the calendar) and let
+//     mktime apply the correct DST-aware offset.
+//   * DTSTART;VALUE=DATE:...          - floating date, same calendar day
+//     everywhere, so local midnight is what we want.
+//   * DTSTART:...T160000              - no zone at all: floating local time.
+//   * DTSTART:...T160000Z / +0200     - a fixed offset uICAL applies exactly.
+//     Render in UTC and convert as UTC; formatting back to local time happens
+//     at display time.
+static time_t to_epoch(const uICAL::DateTime &dt)
+{
+  if (dt.isDate || !dt.tz->is_aware() || dt.tz->has_tzid())
+  {
+    return to_epoch_local(dt.datestamp());
+  }
+
+  static const uICAL::TZ_ptr utc = uICAL::new_ptr<uICAL::TZ>(uICAL::string("Z"));
+  return to_epoch_utc(dt.datestamp(utc));
+}
+
+// True when an epoch time_t lands exactly on local midnight.
+static bool is_local_midnight(time_t epoch)
+{
+  struct tm tm_value;
+  localtime_r(&epoch, &tm_value);
+  return tm_value.tm_hour == 0 && tm_value.tm_min == 0 && tm_value.tm_sec == 0;
 }
 
 // Pull the X-WR-CALNAME property (calendar display name) out of a buffered
@@ -76,17 +135,14 @@ static std::vector<CalendarEvent> collect_events(uICAL::Calendar_ptr &loaded_cal
     {
       uICAL::CalendarEntry_ptr calendar_event = filtered_events_iterator->current();
 
-      uICAL::DateStamp start_ds = calendar_event->start().datestamp();
-      uICAL::DateStamp end_ds = calendar_event->end().datestamp();
-
       CalendarEvent event;
       event.title = String(calendar_event->summary().c_str());
       event.calendar_name = calendar_name;
-      event.start_epoch = to_epoch(start_ds);
-      event.end_epoch = to_epoch(end_ds);
-      // Midnight-to-midnight means the feed gave dates without times.
-      event.all_day = start_ds.hour == 0 && start_ds.minute == 0 && start_ds.second == 0 &&
-                      end_ds.hour == 0 && end_ds.minute == 0 && end_ds.second == 0;
+      event.start_epoch = to_epoch(calendar_event->start());
+      event.end_epoch = to_epoch(calendar_event->end());
+      // Midnight-to-midnight in local time means the feed gave dates without
+      // times.
+      event.all_day = is_local_midnight(event.start_epoch) && is_local_midnight(event.end_epoch);
       events.push_back(event);
 
       // Bound the work a single pathological feed can cause. Well above
