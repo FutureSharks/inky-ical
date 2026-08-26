@@ -1,0 +1,31 @@
+src/display.cpp
+  h_61c37ecb9a0034 58,63
+.gitignore
+  s_e7029b49a53b37::t_d10d0985142faa 60-64
+README.md
+  h_61c37ecb9a0034 7-9,21-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "60a6313bb2e18b20ff70d1d6bde6bcac5e4cfd45",
+  "prompts": {},
+  "humans": {
+    "h_0add7ee37ebac2": {
+      "author": "Max Williams <max-rocket-internet@users.noreply.github.com>"
+    },
+    "h_61c37ecb9a0034": {
+      "author": "Max Williams <futuresharks@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_e7029b49a53b37": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fded5c72-7ef8-4957-9694-ad0d7631c546",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Max Williams <futuresharks@gmail.com>"
+    }
+  }
+}
