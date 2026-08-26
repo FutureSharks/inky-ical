@@ -57,6 +57,11 @@ dkms.conf
 # Secrets and credentials (DO NOT COMMIT)
 secrets.h
 
+# Calendar exports used for local testing. These contain personal data (event
+# titles, attendee email addresses). test/fixtures/sample.ics is synthetic and
+# is deliberately still tracked.
+/*.ics
+
 # VSCode local settings
 .vscode/settings.local.json
 

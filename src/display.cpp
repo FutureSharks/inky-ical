@@ -55,12 +55,12 @@ void display_flush()
 // the opposite drive exactly where the ghost is, cancelling it, and the clear
 // cycles then take the whole panel back to white. This is what an e-reader is
 // doing when it flashes an inverted page between screens.
-static const int32_t ERASE_CYCLES = 3;
+static const int32_t ERASE_CYCLES = 4;
 static const int32_t ERASE_CYCLE_TIME = 50;
 
 // Cycles used when the panel content is unknown and no negative can be drawn,
 // so the erase has nothing to work with but brute force.
-static const int32_t ERASE_CYCLES_BLIND = 4;
+static const int32_t ERASE_CYCLES_BLIND = 6;
 static const int16_t ERASE_SOAK_TIME = 100;
 
 // Remember what the panel now shows. A grayscale draw only ever adds ink, so

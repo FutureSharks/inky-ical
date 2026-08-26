@@ -4,6 +4,10 @@ Do you have a busy life and fail to check your calendar app in the morning? Or s
 
 This project can display your iCAL calendars on an e-ink display. For example your Google, Apple or Microsoft 365 calendars.
 
+![complete-1](images/IMG_2229.jpeg)
+
+![complete-2](images/IMG_2230.jpeg)
+
 Features:
 
 -  Battery powered, lasts months
@@ -13,9 +17,10 @@ Features:
 
 Hardware:
 
-- **Device:** [LilyGo T5 e-Paper S3](https://lilygo.cc/en-de/products/t5-4-7-inch-e-paper-v2-3) (960×540 px, 4.7")
-- **Chipset:** ESP32-S3R8 / ED047TC1
-- **Power:** Uses a LiPo battery
+- **Device:** [LilyGo T5 e-Paper S3](https://lilygo.cc/en-de/products/t5-4-7-inch-e-paper-v2-3)
+- **Screen:**: 4.7" 960×540 e-paper
+- **Chipset:** ESP32-S3 + ED047TC1
+- **Power:** LiPo battery
 - **Language:** Arduino C++
 
 More photos can be found in [images](images) and a CAD model for the enclosure is [here](inky-ical.f3d)
