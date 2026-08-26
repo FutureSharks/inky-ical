@@ -49,7 +49,7 @@ namespace layout
 
   // Longest event title drawn before it is truncated with an ellipsis, so it
   // cannot run into the date column.
-  const int MAX_TITLE_LENGTH = 30;
+  const int MAX_TITLE_LENGTH = 27;
 
   // ===== Type sizes (points) and greys (0 black - 15 white) =====
   const uint8_t SIZE_SPLASH = 48;
@@ -83,7 +83,9 @@ void display_clear_framebuffer();
 void display_flush();
 
 // Erase the panel, then push the framebuffer. Use whenever the framebuffer
-// replaces what is on screen rather than adding to it.
+// replaces what is on screen rather than adding to it. The erase is a dark
+// soak followed by several clear cycles, so it takes a few seconds; that is
+// what keeps deeply set ink (the splash) from ghosting through.
 void display_repaint();
 
 /*
