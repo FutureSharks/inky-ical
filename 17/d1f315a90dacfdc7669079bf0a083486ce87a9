@@ -1,0 +1,17 @@
+inky-ical.ino
+  h_61c37ecb9a0034 18,173-200,208
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "17d1f315a90dacfdc7669079bf0a083486ce87a9",
+  "prompts": {},
+  "humans": {
+    "h_0add7ee37ebac2": {
+      "author": "Max Williams <max-rocket-internet@users.noreply.github.com>"
+    },
+    "h_61c37ecb9a0034": {
+      "author": "Max Williams <futuresharks@gmail.com>"
+    }
+  }
+}
