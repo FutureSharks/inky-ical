@@ -15,6 +15,7 @@
 #include <time.h>
 #include <ArduinoLog.h>
 #include <epd_driver.h>
+#include <Wire.h>
 
 // Set when startup could not complete; loop() then powers the device down for
 // good rather than scheduling another refresh.
@@ -169,6 +170,34 @@ void setup()
   display_calendar(events);
 }
 
+// To prevent the touch controller from draining power before going into deep sleep
+// See https://github.com/Xinyuan-LilyGO/LilyGo-EPD47/issues/167
+static void poweroff_touch()
+{
+  Log.notice("Starting touch input power off" CR);
+  pinMode(TOUCH_INT, OUTPUT);
+  digitalWrite(TOUCH_INT, HIGH);  // re-address it if it slept in a prior cycle
+  delay(120);
+
+  Wire.begin(BOARD_SDA, BOARD_SCL);
+
+  digitalWrite(TOUCH_INT, LOW);
+  for (int i = 0; i < 5; ++i) {  // retry: single send doesn't reliably sleep it
+    Wire.beginTransmission(0x5D);
+    Wire.write(0x80);  // command register 0x8040
+    Wire.write(0x40);
+    Wire.write(0x05);  // enter sleep
+    Wire.endTransmission();
+    delay(20);
+  }
+  Wire.end();
+
+  pinMode(BOARD_SDA, OPEN_DRAIN);
+  pinMode(BOARD_SCL, OPEN_DRAIN);
+  pinMode(TOUCH_INT, OPEN_DRAIN);
+  Log.notice("Finished touch input power off" CR);
+}
+
 // Power the panel and radio down and deep sleep. With wake_seconds of zero no
 // wake-up timer is armed, so the device sleeps until the reset button is pressed.
 static void power_down(uint64_t wake_seconds)
@@ -176,6 +205,7 @@ static void power_down(uint64_t wake_seconds)
   WiFi.disconnect(true);
   Serial.end();
   epd_poweroff_all();
+  poweroff_touch();
   if (wake_seconds > 0)
   {
     esp_sleep_enable_timer_wakeup(wake_seconds * 1000000ULL);
